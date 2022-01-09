@@ -86,7 +86,7 @@ const Sidebar = () => {
               iconName="la-photo-video"
             />
           }
-
+        
           {currentUser && currentUser.role === 'admin' &&
             <LinksGroup
               onActiveSidebarItemChange={activeItem => dispatch(changeActiveSidebarItem(activeItem))}
@@ -97,7 +97,7 @@ const Sidebar = () => {
               iconName="la-eye"
             />
           }
-
+        
             <LinksGroup
               onActiveSidebarItemChange={activeItem => dispatch(changeActiveSidebarItem(activeItem))}
               activeItem={activeItem}
@@ -115,7 +115,7 @@ const Sidebar = () => {
               isHeader
               iconName="la-key"
             />
-
+        {/*
           <LinksGroup
             onActiveSidebarItemChange={activeItem => dispatch(changeActiveSidebarItem(activeItem))}
             activeItem={activeItem}
@@ -127,7 +127,7 @@ const Sidebar = () => {
             labelColor="success"
             target="_blank"
           />
-
+        */}
           <li className={classnames('link-wrapper', s2.headerLink)}>
             <a
               target={"_blank"}

@@ -3,11 +3,11 @@ import * as dataFormat from 'pages/CRUD/Faces/table/FacesDataFormatters';
 
 import actions from 'store/actions/faces/facesListActions';
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
-import {push} from 'connected-react-router';
-import {uniqueId} from 'lodash';
-import {useHistory} from 'react-router';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { push } from 'connected-react-router';
+import { uniqueId } from 'lodash';
+import { useHistory } from 'react-router';
 
 import {
   Form,
@@ -36,7 +36,7 @@ const { SearchBar } = Search;
 
 const FacesTable = () => {
   const [filters, setFilters] = React.useState<any[]>([
-      {label: 'age', title: 'age'},{label: 'gender', title: 'gender'},{label: 'expression', title: 'expression'},
+    { label: 'age', title: 'age' }, { label: 'gender', title: 'gender' }, { label: 'expression', title: 'expression' },
 
   ]);
   const [filterItems, setFilterItems] = React.useState<{
@@ -61,7 +61,7 @@ const FacesTable = () => {
   }
 
   React.useEffect(() => {
-    dispatch(actions.doFetch({limit: sizePerPage, page: currPage}));
+    dispatch(actions.doFetch({ limit: sizePerPage, page: currPage }));
   }, [currPage, sizePerPage])
 
   React.useEffect(() => {
@@ -91,29 +91,32 @@ const FacesTable = () => {
 
   const columns: Array<any> = [
 
-    { dataField: "age",
+    {
+      dataField: "age",
       sort: true,
 
       text: "age"
     },
 
-    { dataField: "gender",
+    {
+      dataField: "gender",
       sort: true,
 
       text: "gender"
     },
 
-    { dataField: "expression",
+    {
+      dataField: "createdAt",
       sort: true,
 
-      text: "expression"
+      text: "created at"
     },
 
-    {
+    {/* {
       dataField: 'id',
       text: 'Actions',
       formatter: actionFormatter
-    }
+    } */}
   ];
 
   const handleChange = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +124,7 @@ const FacesTable = () => {
     const name = e.target.name;
 
     const index = filterItems.findIndex((item: any) => item.id === id);
-    let obj: {[name: string]: any} = filterItems[index];
+    let obj: { [name: string]: any } = filterItems[index];
     obj.fields[name] = value;
     obj.id = id;
   };
@@ -134,14 +137,14 @@ const FacesTable = () => {
         ? request += `${item.fields.selectedField}Range=${item.fields.filterValueFrom}&${item.fields.selectedField}Range=${item.fields.filterValueTo}&`
         : request += `${item.fields.selectedField}=${item.fields.filterValue}&`
     })
-    dispatch(actions.doFilter(request, {limit: 10, page: 1}));
+    dispatch(actions.doFilter(request, { limit: 10, page: 1 }));
     setCurrPage(1);
     setSizePerPage(10);
   };
 
   const handleReset = () => {
     setFilterItems([])
-    dispatch(actions.doFetch({limit: 10, page: 1}));
+    dispatch(actions.doFetch({ limit: 10, page: 1 }));
   }
 
   const addFilter = () => {
@@ -164,7 +167,7 @@ const FacesTable = () => {
     if (newItems.length) {
       setFilterItems(newItems);
     } else {
-      dispatch(actions.doFetch({limit: 10, page: 1}));
+      dispatch(actions.doFetch({ limit: 10, page: 1 }));
       setFilterItems(newItems);
     }
   }
@@ -185,9 +188,9 @@ const FacesTable = () => {
   }
 
   const pageButtonRenderer = ({
-                                page,
-                                onPageChange
-                              }: {
+    page,
+    onPageChange
+  }: {
     page: number | string;
     onPageChange: Function
   }) => {
@@ -221,14 +224,14 @@ const FacesTable = () => {
   return (
     <div>
       <Widget title={<h4>Faces</h4>} collapse close>
-        <Link to="/admin/faces/new">
+        {/* <Link to="/admin/faces/new">
           <button
             className="btn btn-primary"
             type="button"
           >
             New
           </button>
-        </Link>
+        </Link> */}
         <button
           className="btn btn-primary ml-3"
           type="button"
@@ -238,7 +241,7 @@ const FacesTable = () => {
         </button>
 
         <Form onSubmit={handleSubmit}>
-          { filterItems.map(item => (
+          {filterItems.map(item => (
             // @ts-ignore
             <Row form className="mt-3" key={item.id}>
               <Col xs={4} md={4} lg={3}>
@@ -307,7 +310,7 @@ const FacesTable = () => {
               </Col>
             </Row>))
           }
-          { filterItems.length > 0 && (
+          {filterItems.length > 0 && (
             // @ts-ignore
             <Row>
               <Col xs={12} lg={3} className="align-self-end mb-3">

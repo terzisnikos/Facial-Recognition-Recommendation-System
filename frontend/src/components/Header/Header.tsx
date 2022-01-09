@@ -105,7 +105,9 @@ const Header = () => {
         </NavLink>
       </div>
       <div className={`d-print-none ${s.root}`}>
-        <UncontrolledAlert
+
+      {/* 
+      <UncontrolledAlert
           className={`${s.alert} mr-3 d-lg-down-none animate__animated animate__bounceIn animate__delay-1s`}
         >
           <i className="fa fa-info-circle mr-1" /> Check out Light Blue{' '}
@@ -113,7 +115,9 @@ const Header = () => {
             <i className="fa fa-cog" />
           </button>{' '}
           on the right!
-        </UncontrolledAlert>
+      </UncontrolledAlert> 
+      */}
+
         <Collapse className={`${s.searchCollapse} ml-lg-0 mr-md-3`} isOpen={searchOpen}>
           <InputGroup className={`${s.navbarForm} ${searchFocused ? s.navbarFormFocused : ''}`}>
             <InputGroupAddon addonType="prepend" className={s.inputAddon}>

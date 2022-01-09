@@ -121,7 +121,7 @@ import microsoft from '../../../images/microsoft.png';
                 {isFetching ? 'Loading...' : 'Register'}
             </Button>
             <p className="widget-auth-info">or sign up with</p>
-            <div className="social-buttons">
+     {/*       <div className="social-buttons">
                 <Button onClick={googleLogin} color="primary" className="social-button mb-2">
                 <i className="social-icon social-google"/>
                 <p className="social-text">GOOGLE</p>
@@ -133,7 +133,7 @@ import microsoft from '../../../images/microsoft.png';
             />
             <p className="social-text">MICROSOFT</p>
         </Button>
-    </div>
+            </div> */}
 </form>
     <p className="widget-auth-info">Already have the account? Login now!</p>
     <Link className="d-block text-center" to="login">

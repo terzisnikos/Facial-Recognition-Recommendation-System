@@ -19,7 +19,7 @@ import { push } from 'connected-react-router';
 import { useLocation } from 'react-router';
 
 const Login = () => {
-    const [email, setEmail] = useState('admin@flatlogic.com');
+    const [email, setEmail] = useState('admin@email.com');
     const [password, setPassword] = useState('password');
 
     const location = useLocation();
@@ -69,9 +69,9 @@ const Login = () => {
                             Use your email to sign in.
                         </p>
                         <Alert className="alert-sm text-center mt-2 widget-middle-overflow rounded-0" color="secondary">
-                            This is a real app with Node.js backend - use
+                            This is a React app with Node.js backend - use
                             <br/>
-                            <span className="font-weight-bold">"admin@flatlogic.com / password"</span>
+                            <span className="font-weight-bold">"admin@email.com / password"</span>
                             <br/>
                             to login!
                         </Alert>
@@ -119,7 +119,7 @@ const Login = () => {
                                     Don't have an account? Sign up now!
                                 </p>
                                 <Link className="d-block text-center mb-4" to="register">Create an Account</Link>
-                                <div className="social-buttons">
+                         {/*       <div className="social-buttons">
                                     <Button onClick={googleLogin} color="primary" className="social-button">
                                         <i className="social-icon social-google"/>
                                         <p className="social-text">GOOGLE</p>
@@ -129,7 +129,7 @@ const Login = () => {
                                            style={{backgroundImage: `url(${microsoft})`}}/>
                                         <p className="social-text">MICROSOFT</p>
                                     </Button>
-                                </div>
+                        </div> */}
                             </div>
                         </form>
                     </Widget>

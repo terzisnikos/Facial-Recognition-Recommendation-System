@@ -69,9 +69,19 @@ const router = express.Router();
   */
 
 router.post('/', async (req, res) => {
-    await FacesService.create(req.body.data /*, req.currentUser, true, req.headers.referer*/);
+
+  try {
+
+    await FacesService.create(req.body, req.currentUser, true, req.headers.referer);
     const payload = true;
     res.status(200).send(payload);
+  } catch (error) {
+    console.log(error);
+    let errorMsg = "error:"+ error;
+    res.status(500).send(errorMsg);
+
+}
+   
 });
 
   /**

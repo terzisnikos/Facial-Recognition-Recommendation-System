@@ -95,7 +95,9 @@ const Layout = () => {
                 </CSSTransition>
               </TransitionGroup>
               <footer className={s.contentFooter}>
-  Facial Recognition Recommendation System - React admin template made by <a href="https://flatlogic.com" >Flatlogic</a>
+                Facial Recognition Recommendation System - 
+                made by <a href="https://github.com/terzisnikos">Nikos Terzis  </a>
+                 <i className="lab la-github"></i>
               </footer>
             </main>
           </Hammer>

@@ -1,6 +1,6 @@
 const config = {
   name: 'react user management',
-  title: 'React User Management built with React JS by Flatlogic',
+  title: 'React User Management built with React JS',
   version: '3.8.0',
   settings: {
     screens: {
