@@ -1,84 +1,100 @@
 
 const advertismentsFields = {
-	id: { type: 'id', label: 'ID' },
+    id: { type: 'id', label: 'ID' },
 
-    user: { type: 'relation_one', label: 'user',
-
-    },
-
-    IniDate: { type: 'datetime', label: 'Initial Date',
+    user: {
+        type: 'relation_one', label: 'user',
 
     },
 
-    endDate: { type: 'datetime', label: 'end Date',
+    IniDate: {
+        type: 'datetime', label: 'Initial Date',
 
     },
 
-    active: { type: 'boolean', label: 'active',
+    endDate: {
+        type: 'datetime', label: 'end Date',
 
     },
 
-    expression: { type: 'enum', label: 'expression',
-
-    options: [
-
-    { value: 'neutral', label: 'neutral' },
-
-    { value: 'happy', label: 'happy' },
-
-]
+    active: {
+        type: 'boolean', label: 'active',
 
     },
 
-    location: { type: 'string', label: 'location',
+    expression: {
+        type: 'enum', label: 'expression',
+
+        options: [
+
+            { value: 'neutral', label: 'neutral' },
+
+            { value: 'happy', label: 'happy' },
+
+        ]
 
     },
 
-    name: { type: 'string', label: 'name',
+    location: {
+        type: 'string', label: 'location',
 
     },
 
-    ad_image: { type: 'images', label: 'ad_image',
+    name: {
+        type: 'string', label: 'name',
 
     },
 
-    age: { type: 'enum', label: 'age',
-
-    options: [
-
-    { value: '12 – 17', label: '12 – 17' },
-
-    { value: '18 – 24', label: '18 – 24' },
-
-    { value: '25 – 34', label: '25 – 34' },
-
-    { value: '35 – 44', label: '35 – 44' },
-
-    { value: '45 – 54', label: '45 – 54' },
-
-    { value: '55 – 64', label: '55 – 64' },
-
-    { value: '65+', label: '65+' },
-
-]
+    ad_image: {
+        type: 'images', label: 'ad_image',
 
     },
 
-    gender: { type: 'enum', label: 'gender',
+    age: {
+        type: 'enum', label: 'age',
 
-    options: [
+        options: [
 
-    { value: 'male', label: 'male' },
+            { value: '12 – 17', label: '12 – 17' },
 
-    { value: 'female', label: 'female' },
+            { value: '18 – 24', label: '18 – 24' },
 
-    { value: 'unisex', label: 'unisex' },
+            { value: '25 – 34', label: '25 – 34' },
 
-]
+            { value: '35 – 44', label: '35 – 44' },
+
+            { value: '45 – 54', label: '45 – 54' },
+
+            { value: '55 – 64', label: '55 – 64' },
+
+            { value: '65+', label: '65+' },
+
+        ]
 
     },
 
-    coefficient: { type: 'int', label: 'coefficient',
+    gender: {
+        type: 'enum', label: 'gender',
+
+        options: [
+
+            { value: 'male', label: 'male' },
+
+            { value: 'female', label: 'female' },
+
+            { value: 'unisex', label: 'unisex' },
+
+        ]
+
+    },
+
+    coefficient: {
+        type: 'int', label: 'coefficient',
+
+    },
+
+    target: {
+        type: 'int', label: 'target',
 
     },
 

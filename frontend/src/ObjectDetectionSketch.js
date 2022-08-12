@@ -1,30 +1,11 @@
-import React, { useState } from "react";
-import * as p5 from "p5";
 import "p5/lib/addons/p5.dom";
 import * as faceapi from "face-api.js";
-import {
-  extendWithFaceLandmarks,
-  FaceLandmarks,
-  FaceLandmarks68,
-  isWithFaceLandmarks,
-} from "face-api.js";
 import axios from 'axios';
-
-import Graph from './components/Charts/PieChart';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
-import qs from 'qs';
-
-import SimpleImageSlider from "react-simple-image-slider";
-
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-
 const MODEL_URL = "/models";
-
 var startingTimestamp = new Date().getTime();
-
 
 //Function is called only once.
 export default function sketch(p) {
@@ -99,7 +80,7 @@ export default function sketch(p) {
 
         const max = Math.max(...expressions);
 
-        const expression_value = Object.keys(copiedExpression).filter((key) => {
+        var expression_value = Object.keys(copiedExpression).filter((key) => {
           return copiedExpression[key] === max;
         })[0];
 
@@ -117,9 +98,6 @@ export default function sketch(p) {
         );
       }
     });
-
-    // Saving last 5 faces in array - FIFO
-
     //var intervalID = window.setInterval(checkFaceAPI, 5000);
     faceapi
       .detectAllFaces(capture.id())
@@ -129,17 +107,14 @@ export default function sketch(p) {
         showFaceDetectionData(data);
         printResultOnlyAfter10Seconds(data);
       });
-
-    //var intervalID = window.setInterval(calcAgeAvg, 5000);
   };
-
 }
 
-
+console.log(' EXXPRESION VAL')
 
 export var imagesList = [
- { url: "https://www.carscoops.com/wp-content/uploads/2021/04/Brie-Larson-Nissan-3.jpg"},
-  { url: "https://i.imgur.com/j6HC5Xu.gif" }
+  { url: "https://vafloc01.s3.amazonaws.com/WBStatic/site1102601/dist/img/loader.gif" },
+  { url: "https://vafloc01.s3.amazonaws.com/WBStatic/site1102601/dist/img/loader.gif" }
 ];
 
 console.log('images list from dashboard', imagesList)
@@ -147,28 +122,95 @@ console.log('images list from dashboard', imagesList)
 const menCounters = [0, 0, 0, 0, 0, 0, 0];
 const womenCounters = [0, 0, 0, 0, 0, 0, 0];
 
+let adTickets = [
+  {
+    "id": "0",
+    "adImageUrl": "",
+  }
+]
 
-export function printResultOnlyAfter10Seconds(data) {
+let faceTickets = [
+  {
+    "id": "0",
+    "holder": "",
+  }
+]
+
+var recordTime = 10;
+var numOfTicketsPerFace = 3
+var numOfTicketsPerAd = 5
+var extraAdTicketsNum = 0
+var extraFaceTicketsNum = 0
+var suspensionCounter = 0;
+var facesReached = 0;
+var facesDimensions = [];
+
+export function printResultOnlyAfter10Seconds(data, expression_value) {
 
   let currentTimeStamp = new Date().getTime();
-  if ((Math.floor(currentTimeStamp / 1000)) - (Math.floor(startingTimestamp / 1000)) > 10) {
+  if ((Math.floor(currentTimeStamp / 1000)) - (Math.floor(startingTimestamp / 1000)) > recordTime) {
     startingTimestamp = currentTimeStamp;
     console.log("");
     console.log("---------- New record ----------");
-
     console.log('Number of faces: ', Object.keys(data).length);
-
     console.log('Faces data: ', data);
 
     var adImageUrl = ''
+
+    // turn to sleep mode every 2 times with no faces detected
+    if (Object.keys(data).length == 0) {
+      suspensionCounter++;
+      if (suspensionCounter == 2) {
+        imagesList.push({ url: 'https://cdn.wallpapersafari.com/17/13/Ff9pNa.png' })
+        imagesList.push({ url: 'https://cdn.wallpapersafari.com/17/13/Ff9pNa.png' })
+        imagesList.splice(0, 2);
+      }
+    } else {
+      suspensionCounter = 0;
+    }
 
     // DB Post faces data  
     var faceJSON;
 
     for (let i = 0; i < Object.keys(data).length; i++) {
 
+      data[i].id = i;
       faceJSON = JSON.stringify(data[i])
       console.log('JSON: ', data[i]);
+
+      // Add tickets to faces
+
+      if (data[i] != null) {
+
+        // Add promotion points to the face with the highest confidence score
+        if (data[i].detection._score > 0.75)
+          data[i].coefficient = +2;
+        else if (data[i].detection._score > 0.5)
+          data[i].coefficient++;
+
+        // Add promotion points for close distance
+        facesDimensions.push(data[i].detection._box._height);
+
+        // Add promotion points if face is happy
+        /*if (expression_value === 'happy'){
+          data[i].coefficient++;}
+        else if (expression_value === 'sad')
+          data[i].coefficient--;*/
+
+        // console.log('Face Coefficient is ', data[i].coefficient)
+        // extraFaceTicketsNum = Math.round(data[i].coefficient / 10 * numOfTicketsPerFace)
+      }
+      else { extraFaceTicketsNum = 0 }
+
+      var idFaceCount = 0;
+      for (let k = 0; k < numOfTicketsPerFace + extraFaceTicketsNum; k++) {
+        idFaceCount++;
+        let faceTicket = {
+          "id": idFaceCount,
+          "holder": i,
+        }
+        faceTickets.push(faceTicket);
+      }
 
       axios.post('http://localhost:8080/api/faces', faceJSON, {
         headers: {
@@ -178,18 +220,51 @@ export function printResultOnlyAfter10Seconds(data) {
         .then(function (response) {
           console.log('AXIOS POST ', response);
         })
+
+
     }
 
-    // Get Advertisments data from DB
+    console.log('Face tickets +++++++++++++++++++', faceTickets)
+
+    // Height relative differnce to the largest face as reference
+   /* const sortedFacesByHeight = data.sort((a, b) => b.detection._box._height - a.detection._box._height);
+    console.log('>> sorted by height', sortedFacesByHeight)
+    const largestFaceHeight = sortedFacesByHeight[0]
+    console.log('Largest face ', largestFaceHeight)
+    for (let i = 1; i <= sortedFacesByHeight.length; i++) {
+      if (largestFaceHeight - sortedFacesByHeight[i] / largestFaceHeight < 0.25)
+        console.log('>>0.25')
+      else
+        console.log(largestFaceHeight - sortedFacesByHeight[i] / largestFaceHeight)
+        console.log('>>0.50')
+    }
+*/
+
+
+    // Returns a random face value:
+    const randFaceNum = Math.floor(Math.random() * idFaceCount) + 1;
+
+    console.log('rand2', randFaceNum)
+    // finding the face holder whose id is equal to the random number
+    const pickedFace = faceTickets.find(face => face.id === randFaceNum);
+
+    //Empty generated tickets after draw
+    faceTickets = [];
+
+    // printing object on the console
+    console.log('face picked ', pickedFace)
+
+
+    // Get Advertisments data from DB every refreshTime(sec)
+
     if (typeof data[0] === 'undefined') {
       console.log('No faces found')
     } else
       var current_gender = data[0].gender;
 
-    // For MEN
     for (let i = 0; i < Object.keys(data).length; i++) {
-
-      if (data[0].gender == 'male') {
+      // For MEN
+      if (data[i].gender == 'male') {
 
         if (data[i].age > 12 && data[i].age < 18) {
           console.log('Fetch male ads 12-18')
@@ -214,6 +289,7 @@ export function printResultOnlyAfter10Seconds(data) {
             })
           menCounters[0]++;
         }
+
         else if (data[i].age >= 18 && data[i].age < 25) {
           console.log('Fetch male ads 18-24')
           axios.get('http://localhost:8080/api/advertisments', {
@@ -228,11 +304,47 @@ export function printResultOnlyAfter10Seconds(data) {
           })
             .then(function (response) {
               console.log(response);
-              adImageUrl = response.data.rows[0].ad_image[0].publicUrl;
+              var idCount = 0
+
+              for (let i = 0; i < response.data.rows.length; i++) {
+                if (response.data.rows[i].coefficient != null) {
+                  console.log('Coefficient is ', response.data.rows[i].coefficient)
+                  extraAdTicketsNum = Math.round(response.data.rows[i].coefficient / 10 * numOfTicketsPerAd)
+                }
+                else { extraAdTicketsNum = 0 }
+                for (let j = 0; j < numOfTicketsPerAd + extraAdTicketsNum; j++) {
+                  idCount++;
+                  let adTicket = {
+                    "id": idCount,
+                    "adImageUrl": response.data.rows[i].ad_image[0].publicUrl,
+                  }
+                  adTickets.push(adTicket);
+                }
+              }
+
+              console.log(adTickets)
+
+              // Returns a random integer from 1 to 10:
+              const randAdNum = Math.floor(Math.random() * idCount) + 1;
+
+              console.log('rand', randAdNum)
+              // finding the object whose id is equal to the random number
+              const pickedAd = adTickets.find(ad => ad.id === randAdNum);
+
+              //Empty generated tickets after draw
+              adTickets = [];
+
+              // printing object on the console
+              console.log('ad picked ', pickedAd)
+
+              adImageUrl = pickedAd.adImageUrl;
               imagesList.push({ url: adImageUrl })
               imagesList.shift();
-              console.log("about to write to localStorage");
-              localStorage.setItem('imagesList', imagesList);
+
+              // faces that ad reached
+
+              facesReached = facesReached + data.length
+              console.log('faces reached', facesReached)
 
               console.log('Ad image:', adImageUrl);
               console.log('imagesList.url', imagesList)
@@ -356,11 +468,8 @@ export function printResultOnlyAfter10Seconds(data) {
         console.log('Men age-range counters', menCounters)
 
       }
-
-
       // For WOMEN
-
-      if (data[0].gender == 'female') {
+      if (data[i].gender == 'female') {
 
         if (data[i].age > 12 && data[i].age < 18) {
           console.log('Fetch female ads 12-18')
@@ -485,7 +594,6 @@ export function printResultOnlyAfter10Seconds(data) {
         console.log('WOMEN age-range counters', womenCounters)
 
       }
-
     }
 
   }

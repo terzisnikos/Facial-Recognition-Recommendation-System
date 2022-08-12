@@ -19,7 +19,7 @@ module.exports = {
     username: 'root',
     dialect: 'mysql',
     password: 'MyNewPass-123456',      
-    database: 'v5db',
+    database: 'v6db',
     host: process.env.DEV_DB_HOST || 'localhost',
     logging: console.log,
     seederStorage: 'sequelize',

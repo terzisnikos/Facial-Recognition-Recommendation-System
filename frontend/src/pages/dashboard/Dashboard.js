@@ -89,7 +89,7 @@ const Dashboard = () => {
                     showNavs={false}
                     autoPlay={true}
                     autoPlayDelay={10}
-                    duration={0.7}
+                    //duration={0.7}
                     slideDuration={2}
                     bgColor={'#000'}
                 />

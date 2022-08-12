@@ -28,5 +28,7 @@ export type AdvertismentsSelectItemProps = {
 
       coefficient ? : any;
 
+      target ? : any;
+
 }
 

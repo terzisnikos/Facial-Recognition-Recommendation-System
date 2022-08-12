@@ -6,6 +6,7 @@ import axios from 'axios';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
+
 var menCounter = 0;
 var womenCounter = 0;
 
@@ -21,7 +22,6 @@ axios.get('http://localhost:8080/api/faces', {
     console.log(response);
     menCounter = response.data.count
     console.log('men counter dashboard', response.data.count);
-
   })
 
 axios.get('http://localhost:8080/api/faces', {
@@ -36,9 +36,7 @@ axios.get('http://localhost:8080/api/faces', {
     console.log(response);
     womenCounter = response.data.count
     console.log('women counter dashboard', response.data.count);
-
   })
-
 
 
 var data = {
@@ -46,7 +44,7 @@ var data = {
   datasets: [
     {
       label: '# of Votes',
-      data: [menCounter,womenCounter],
+      data: [2, 8],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -59,6 +57,9 @@ var data = {
     },
   ],
 };
+
+data.datasets[0].data.push(menCounter, womenCounter)
+
 
 export function PieChart() {
 

@@ -65,14 +65,14 @@ const AdvertismentsForm = (props: AdvertismentsFormProps) => {
     return FormValidations(advertismentsFields, record || {});
   }
 
-  const handleSubmit = (values: {[rest: string]: any}) => {
+  const handleSubmit = (values: { [rest: string]: any }) => {
     // @ts-ignore
     const { id, ...data } = PreparedValues(advertismentsFields, values || {});
     onSubmit(id, data);
   };
 
   const title = () => {
-    if(isProfile) {
+    if (isProfile) {
       return 'Edit My Profile';
     }
 
@@ -124,7 +124,6 @@ const AdvertismentsForm = (props: AdvertismentsFormProps) => {
             <InputFormItem
               name={'location'}
               schema={advertismentsFields}
-
             />
 
             <InputFormItem
@@ -156,6 +155,11 @@ const AdvertismentsForm = (props: AdvertismentsFormProps) => {
 
             <InputNumberFormItem
               name={'coefficient'}
+              schema={advertismentsFields}
+            />
+
+            <InputNumberFormItem
+              name={'target'}
               schema={advertismentsFields}
             />
 

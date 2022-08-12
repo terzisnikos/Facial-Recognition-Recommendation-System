@@ -10,85 +10,90 @@ const Op = Sequelize.Op;
 module.exports = class AdvertismentsDBApi {
 
   static async create(data, options) {
-  const currentUser = (options && options.currentUser) || { id: null };
-  const transaction = (options && options.transaction) || undefined;
+    const currentUser = (options && options.currentUser) || { id: null };
+    const transaction = (options && options.transaction) || undefined;
 
-  const advertisments = await db.advertisments.create(
-  {
-  id: data.id || undefined,
+    const advertisments = await db.advertisments.create(
+      {
+        id: data.id || undefined,
 
-    IniDate: data.IniDate
-    ||
-    null
-,
+        IniDate: data.IniDate
+          ||
+          null
+        ,
 
-    endDate: data.endDate
-    ||
-    null
-,
+        endDate: data.endDate
+          ||
+          null
+        ,
 
-    active: data.active
-    ||
-    false
+        active: data.active
+          ||
+          false
 
-,
+        ,
 
-    expression: data.expression
-    ||
-    null
-,
+        expression: data.expression
+          ||
+          null
+        ,
 
-    location: data.location
-    ||
-    null
-,
+        location: data.location
+          ||
+          null
+        ,
 
-    name: data.name
-    ||
-    null
-,
+        name: data.name
+          ||
+          null
+        ,
 
-    age: data.age
-    ||
-    null
-,
+        age: data.age
+          ||
+          null
+        ,
 
-    gender: data.gender
-    ||
-    null
-,
+        gender: data.gender
+          ||
+          null
+        ,
 
-    coefficient: data.coefficient
-    ||
-    null
-,
+        coefficient: data.coefficient
+          ||
+          null
+        ,
 
-  importHash: data.importHash || null,
-  createdById: currentUser.id,
-  updatedById: currentUser.id,
-  },
-  { transaction },
-  );
+        terget: data.terget
+          ||
+          null
+        ,
+
+        importHash: data.importHash || null,
+        createdById: currentUser.id,
+        updatedById: currentUser.id,
+      },
+      { transaction },
+    );
 
     await advertisments.setUser(data.user || null, {
-    transaction,
+      transaction,
     });
 
     await FileDBApi.replaceRelationFiles(
-    {
-    belongsTo: db.advertisments.getTableName(),
-    belongsToColumn: 'ad_image',
-    belongsToId: advertisments.id,
-    },
-    data.ad_image,
-    options,
+      {
+        belongsTo: db.advertisments.getTableName(),
+        belongsToColumn: 'ad_image',
+        belongsToId: advertisments.id,
+      },
+      data.ad_image,
+      options,
     );
 
-  return advertisments;
+    return advertisments;
   }
 
   static async update(id, data, options) {
-    const currentUser = (options && options.currentUser) || {id: null};
+    const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
     const advertisments = await db.advertisments.findByPk(id, {
@@ -99,54 +104,59 @@ module.exports = class AdvertismentsDBApi {
       {
 
         IniDate: data.IniDate
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         endDate: data.endDate
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         active: data.active
-        ||
-        false
+          ||
+          false
 
-,
+        ,
 
         expression: data.expression
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         location: data.location
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         name: data.name
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         age: data.age
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         gender: data.gender
-        ||
-        null
-,
+          ||
+          null
+        ,
 
         coefficient: data.coefficient
+          ||
+          null
+        ,
+
+        EventTarget: data.terget
         ||
         null
-,
+        ,
 
         updatedById: currentUser.id,
       },
-      {transaction},
+      { transaction },
     );
 
     await advertisments.setUser(data.user || null, {
@@ -167,7 +177,7 @@ module.exports = class AdvertismentsDBApi {
   }
 
   static async remove(id, options) {
-    const currentUser = (options && options.currentUser) || {id: null};
+    const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
     const advertisments = await db.advertisments.findByPk(id, options);
@@ -197,7 +207,7 @@ module.exports = class AdvertismentsDBApi {
       return advertisments;
     }
 
-    const output = advertisments.get({plain: true});
+    const output = advertisments.get({ plain: true });
 
     output.user = await advertisments.getUser({
       transaction
@@ -214,8 +224,8 @@ module.exports = class AdvertismentsDBApi {
     var limit = filter.limit || 0;
     var offset = 0;
     if (filter.page != 1 && filter.page) {
-    const currentPage = +filter.page - 1;
-    offset = currentPage * limit;
+      const currentPage = +filter.page - 1;
+      offset = currentPage * limit;
     }
     var orderBy = null;
 
@@ -337,6 +347,30 @@ module.exports = class AdvertismentsDBApi {
         }
       }
 
+      if (filter.terget) {
+        const [start, end] = filter.tergetRange;
+
+        if (start !== undefined && start !== null && start !== '') {
+          where = {
+            ...where,
+            target: {
+              ...where.target,
+              [Op.gte]: start,
+            },
+          };
+        }
+
+        if (end !== undefined && end !== null && end !== '') {
+          where = {
+            ...where,
+            target: {
+              ...where.target,
+              [Op.lte]: end,
+            },
+          };
+        }
+      }
+
       if (
         filter.active === true ||
         filter.active === 'true' ||
@@ -381,12 +415,12 @@ module.exports = class AdvertismentsDBApi {
 
       if (filter.user) {
         var listItems = filter.user.split('|').map(item => {
-          return  Utils.uuid(item)
+          return Utils.uuid(item)
         });
 
         where = {
           ...where,
-          userId: {[Op.or]: listItems}
+          userId: { [Op.or]: listItems }
         };
       }
 
@@ -428,10 +462,10 @@ module.exports = class AdvertismentsDBApi {
       },
     );
 
-//    rows = await this._fillWithRelationsAndFilesForRows(
-//      rows,
-//      options,
-//    );
+    //    rows = await this._fillWithRelationsAndFilesForRows(
+    //      rows,
+    //      options,
+    //    );
 
     return { rows, count };
   }
@@ -453,7 +487,7 @@ module.exports = class AdvertismentsDBApi {
     }
 
     const records = await db.advertisments.findAll({
-      attributes: [ 'id', 'user' ],
+      attributes: ['id', 'user'],
       where,
       limit: limit ? Number(limit) : undefined,
       orderBy: [['user', 'ASC']],

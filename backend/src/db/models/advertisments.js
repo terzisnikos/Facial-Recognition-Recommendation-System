@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const moment = require('moment');
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   const advertisments = sequelize.define(
     'advertisments',
     {
@@ -14,17 +14,17 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
       },
 
-IniDate: {
+      IniDate: {
         type: DataTypes.DATE,
 
       },
 
-endDate: {
+      endDate: {
         type: DataTypes.DATE,
 
       },
 
-active: {
+      active: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
@@ -32,7 +32,7 @@ active: {
 
       },
 
-expression: {
+      expression: {
         type: DataTypes.ENUM,
 
         values: [
@@ -45,28 +45,28 @@ expression: {
 
       },
 
-location: {
+      location: {
         type: DataTypes.TEXT,
 
       },
 
-name: {
+      name: {
         type: DataTypes.TEXT,
 
       },
 
-age: {
+      age: {
         type: DataTypes.ENUM,
 
         values: [
 
-          "12 – 17",
+          firstDec = "12 – 17",
 
-          "18 – 24",
+          secDec = "18 – 24",
 
-          "25 – 34",
+          thirdDec = "25 – 34",
 
-          "35 – 44",
+          fourthDec = "35 – 44",
 
           "45 – 54",
 
@@ -78,7 +78,7 @@ age: {
 
       },
 
-gender: {
+      gender: {
         type: DataTypes.ENUM,
 
         values: [
@@ -93,9 +93,12 @@ gender: {
 
       },
 
-coefficient: {
+      coefficient: {
         type: DataTypes.INTEGER,
+      },
 
+      target: {
+        type: DataTypes.INTEGER,
       },
 
       importHash: {

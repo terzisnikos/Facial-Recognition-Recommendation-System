@@ -41,7 +41,7 @@ const AdvertismentsTable = () => {
   const [filters, setFilters] = React.useState<any[]>([
       {label: 'location', title: 'location'},{label: 'name', title: 'name'},
       {label: 'coefficient', title: 'coefficient', number: 'true'},
-
+      {label: 'target', title: 'target', number: 'true'},
       {label: 'user', title: 'user'},
   ]);
   const [filterItems, setFilterItems] = React.useState<{
@@ -170,6 +170,12 @@ const AdvertismentsTable = () => {
       sort: true,
 
       text: "coefficient"
+    },
+
+    { dataField: "target",
+    sort: true,
+
+    text: "target"
     },
 
     {
